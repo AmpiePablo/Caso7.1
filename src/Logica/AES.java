@@ -20,6 +20,9 @@ public class AES {
     private static ArrayList<Numero> numeros ;
     private static String secretKeyActual="29dh120_dk1_3";
     private static String textoEncriptado="xZwM7BWIpSjYyGFr9rhpEa+cYVtACW7yQKmyN6OYSCv0ZEg9jWbc6lKzzCxRSSIvOvlimQZBMZOYnOwiA9yy3YU8zk4abFSItoW6Wj0ufQ0=";
+    private static ArrayList<Letra> posiblesLetras=new ArrayList<Letra>();
+    private static ArrayList<Numero> posiblesNumeros=new ArrayList<Numero>();
+    
     
     AES(){
         
@@ -83,8 +86,11 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
       String textoEncriptada="xZwM7BWIpSjYyGFr9rhpEa+cYVtACW7yQKmyN6OYSCv0ZEg9jWbc6lKzzCxRSSIvOvlimQZBMZOYnOwiA9yy3YU8zk4abFSItoW6Wj0ufQ0=";
       tomaLetrasNumeros();
       sacarPosibilidades();
-      //imprimir();
+      System.out.println("Todos los subconjuntos");
       imprimir2();
+      tomaPosiblesRespuestas();
+      System.out.println("Estas Son las letras y numeros que se acercan más a la respuesta");
+      imprimir();
      // System.out.println(completaPalabra("h",7,"29dh120_dk1_3"));
       /*String decryptedString = AES.decrypt(textoEncriptada, "29dh120_dk1_3") ;
       if(decryptedString==null){
@@ -129,8 +135,9 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
   }
   
   public static void sacarPosibilidades(){
+
     int cantAciertos=0;
-    while(cantAciertos<25){
+    while(cantAciertos<20){
         ArrayList<Letra> actualLetra=tomaSubConjunto();
         ArrayList<Numero> actualNum=tomaSubConjuntoNum();
         int aciertosTemp=0;
@@ -141,23 +148,51 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
             copia=completaPalabra(actualLetra.get(letraActual).getLetra(),actualNum.get(numActual).getNumero(),secretKeyActual);
             String decryptedString=AES.decrypt(textoEncriptado, copia) ;
             if(decryptedString!=null){
-                actualLetra.get(letraActual).sumarPosibilidad();
-                actualNum.get(numActual).sumarPosibilidad();
-                cantAciertos++;
+                actualLetra=sumaConjunto(actualLetra);
+                actualNum=sumaConjuntoNum(actualNum);
                 aciertosTemp++;
             } 
         }
-        if(aciertosTemp>0){
             subConjuntosLetras.add(actualLetra);
             subConjuntosNumeros.add(actualNum);
-            aciertosTemp=0;
-        }else{
-            aciertosTemp=0;
-        }
+            
         
     }
     System.out.println(cantAciertos);
   }
+  
+  public static ArrayList<Letra> sumaConjunto(ArrayList<Letra> pConjunto){
+	  for(int i=0;i<pConjunto.size();i++) {
+		  pConjunto.get(i).sumarPosibilidad();
+	  }
+	  return pConjunto;
+  }
+  public static ArrayList<Numero> sumaConjuntoNum(ArrayList<Numero> pConjunto){
+	  for(int i=0;i<pConjunto.size();i++) {
+		  pConjunto.get(i).sumarPosibilidad();
+	  }
+	  return pConjunto;
+  }
+  
+  public static void tomaPosiblesRespuestas() {
+    int cantidadAcertadas=0;
+    while(cantidadAcertadas<20) {
+    	int subConjuntoActual = ThreadLocalRandom.current().nextInt(0,subConjuntosLetras.size()-1);
+    	int subConjuntoActualNum=ThreadLocalRandom.current().nextInt(0,subConjuntosNumeros.size()-1);
+    	int letraActual = ThreadLocalRandom.current().nextInt(0,3);
+        int numActual = ThreadLocalRandom.current().nextInt(0,3);
+        if(subConjuntosLetras.get(subConjuntoActual).get(letraActual).getPosibilidadAcierto()>4) {
+        	posiblesLetras.add(subConjuntosLetras.get(subConjuntoActual).get(letraActual));
+        	cantidadAcertadas++;
+        }
+        if(subConjuntosNumeros.get(subConjuntoActualNum).get(numActual).getPosibilidad()>4) {
+        	posiblesNumeros.add(subConjuntosNumeros.get(subConjuntoActualNum).get(numActual));
+        	
+        }
+    }
+  }
+  
+
   public static ArrayList<Letra> tomaSubConjunto(){
       ArrayList<Letra> subConjunto=new ArrayList<Letra>();
       for(int i=0;i<4;i++){
@@ -200,12 +235,12 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
   
   
   public static void imprimir(){
-      for(int i=0;i<total.size();i++){
-          System.out.println(total.get(i).getLetra()+" - "+total.get(i).getPosibilidadAcierto());
+      for(int i=0;i<posiblesLetras.size();i++){
+          System.out.println(posiblesLetras.get(i).getLetra()+" - "+posiblesLetras.get(i).getPosibilidadAcierto());
       }
       System.out.println("Numeros: ");
-      for(int j=0;j<numeros.size();j++){
-          System.out.println(numeros.get(j).getNumero()+" - "+numeros.get(j).getPosibilidad());
+      for(int j=0;j<posiblesNumeros.size();j++){
+          System.out.println(posiblesNumeros.get(j).getNumero()+" - "+posiblesNumeros.get(j).getPosibilidad());
       }
   }
   
@@ -223,4 +258,6 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
           System.out.println("siguiente SubConjunto de Numeros");
       }
   }
+
+  
 }
