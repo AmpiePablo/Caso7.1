@@ -85,6 +85,7 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
   public static void main(String args[]){
       String textoEncriptada="xZwM7BWIpSjYyGFr9rhpEa+cYVtACW7yQKmyN6OYSCv0ZEg9jWbc6lKzzCxRSSIvOvlimQZBMZOYnOwiA9yy3YU8zk4abFSItoW6Wj0ufQ0=";
       tomaLetrasNumeros();
+	  System.out.println("Todos los subconjuntos");
       sacarPosibilidades();
       System.out.println("Todos los subconjuntos");
       imprimir2();
@@ -151,6 +152,7 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
                 actualLetra=sumaConjunto(actualLetra);
                 actualNum=sumaConjuntoNum(actualNum);
                 aciertosTemp++;
+                cantAciertos++;
             } 
         }
             subConjuntosLetras.add(actualLetra);
@@ -181,11 +183,11 @@ public static void setKey(String myKey) throws UnsupportedEncodingException  {
     	int subConjuntoActualNum=ThreadLocalRandom.current().nextInt(0,subConjuntosNumeros.size()-1);
     	int letraActual = ThreadLocalRandom.current().nextInt(0,3);
         int numActual = ThreadLocalRandom.current().nextInt(0,3);
-        if(subConjuntosLetras.get(subConjuntoActual).get(letraActual).getPosibilidadAcierto()>4) {
+        if(subConjuntosLetras.get(subConjuntoActual).get(letraActual).getPosibilidadAcierto()>10) {
         	posiblesLetras.add(subConjuntosLetras.get(subConjuntoActual).get(letraActual));
         	cantidadAcertadas++;
         }
-        if(subConjuntosNumeros.get(subConjuntoActualNum).get(numActual).getPosibilidad()>4) {
+        if(subConjuntosNumeros.get(subConjuntoActualNum).get(numActual).getPosibilidad()>10) {
         	posiblesNumeros.add(subConjuntosNumeros.get(subConjuntoActualNum).get(numActual));
         	
         }
